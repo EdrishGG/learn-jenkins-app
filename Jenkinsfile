@@ -58,6 +58,7 @@ pipeline {
         always {
             // El asterisco mágico le dice a Jenkins que busque en todos lados
             junit '**/junit.xml, **/*results/*.xml'
+            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
         }
     }
 }
