@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        /*stage('Build') {
+        /* stage('Build') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -35,9 +35,7 @@ pipeline {
                 '''
             }
         }
-    }
-    
-    
+        
         stage('E2E') {
             agent {
                 docker {
@@ -47,8 +45,8 @@ pipeline {
             }
             steps {
                 sh '''
-                    npm install -g serve
-                    serve -s build
+                    npm install serve
+                    node_modules/.bin/semver -s build 
                     npx playwright test
                 '''
             }
@@ -60,5 +58,4 @@ pipeline {
             junit 'test-results/junit.xml'
         }
     }
-    
 }
