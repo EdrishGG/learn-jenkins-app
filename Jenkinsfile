@@ -56,7 +56,8 @@ pipeline {
     
     post {
         always {
-            junit 'test-results/junit.xml'
+            // El asterisco mágico le dice a Jenkins que busque en todos lados
+            junit '**/junit.xml, **/*results/*.xml'
         }
     }
 }
