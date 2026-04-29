@@ -46,7 +46,8 @@ pipeline {
             steps {
                 sh '''
                     npm install serve
-                    node_modules/.bin/semver -s build 
+                    node_modules/.bin/semver -s build &
+                    sleep 10
                     npx playwright test
                 '''
             }
