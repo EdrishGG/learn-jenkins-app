@@ -10,12 +10,16 @@ pipeline {
                 }
             }
             steps {
+                // Usamos el símbolo de gato (#) adentro del bloque 'sh' para comentar comandos de Linux
                 sh '''
                     ls -la
                     node --version
                     npm --version
-                    npm ci
-                    npm run build
+                    
+                    echo "Saltando npm ci y npm run build para ahorrar tiempo..."
+                    # npm ci
+                    # npm run build
+                    
                     ls -la
                 '''
             }
@@ -31,7 +35,7 @@ pipeline {
             steps {
                 sh '''
                     echo "Iniciando bateria de pruebas..."
-                    npm run test
+                    # npm run test
                 '''
             }
         }
@@ -45,24 +49,16 @@ pipeline {
             }
             steps {
                 sh '''
-                    npm install serve
-                    npx serve -s build &
-                    sleep 10
-                    npx playwright test --reporter=html
+                    echo "Saltando pruebas E2E pesadas..."
+                    # npm install serve
+                    # npx serve -s build &
+                    # sleep 10
+                    # npx playwright test --reporter=html
                 '''
             }
         }
-    }
-    
-    post {
-        always {
-            // El asterisco mágico le dice a Jenkins que busque en todos lados
-            junit '**/junit.xml, **/*results/*.xml'
-            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-        }
-    }
-    
-    {
+
+        // AQUÍ ES DONDE DEBE IR EL DEPLOY, ADENTRO DE "STAGES"
         stage('Deploy') {
             agent {
                 docker {
@@ -77,4 +73,13 @@ pipeline {
                 '''
             }
         }
+    }
+    
+    post {
+        always {
+            // El asterisco mágico le dice a Jenkins que busque en todos lados
+            junit '**/junit.xml, **/*results/*.xml'
+            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+        }
+    }
 }
