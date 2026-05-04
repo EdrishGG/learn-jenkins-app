@@ -1,8 +1,10 @@
 pipeline {
     agent any
     
-    evironment {
+    // Corregido el typo: environment
+    environment {
         NETLIFY_SITE_ID = '9b15c18a-39bf-4e81-af37-9ef8c5a0ef2c'
+        NETLIFY_AUTH_TOKEN = 'nfp_pQTCRac9T2fggHb5drgdqKVdL1RyjYHH0f4d'
     }
 
     stages {
@@ -14,7 +16,6 @@ pipeline {
                 }
             }
             steps {
-                // Usamos el símbolo de gato (#) adentro del bloque 'sh' para comentar comandos de Linux
                 sh '''
                     ls -la
                     node --version
@@ -62,7 +63,6 @@ pipeline {
             }
         }
 
-        // AQUÍ ES DONDE DEBE IR EL DEPLOY, ADENTRO DE "STAGES"
         stage('Deploy') {
             agent {
                 docker {
@@ -74,7 +74,10 @@ pipeline {
                 sh '''
                     npm install netlify-cli -g
                     netlify --version
-                    echo "Deploying to production. Site ID: 9b15c18a-39bf-4e81-af37-9ef8c5a0ef2c"
+                    echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
+                    
+                    # Llamamos al comando global directamente
+                    netlify status
                 '''
             }
         }
@@ -82,10 +85,6 @@ pipeline {
     
     post {
         always {
-            // Comentamos la recolección de reportes porque saltamos las pruebas reales
-            // junit '**/junit.xml, **/*results/*.xml'
-            // publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-            
             echo '¡Pipeline finalizado con exito! (Reportes desactivados temporalmente)'
         }
     }
