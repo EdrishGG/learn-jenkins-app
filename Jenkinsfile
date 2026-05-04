@@ -22,8 +22,8 @@ pipeline {
                     npm --version
                     
                     echo "Saltando npm ci y npm run build para ahorrar tiempo..."
-                    # npm ci
-                    # npm run build
+                    npm ci
+                    npm run build
                     
                     ls -la
                 '''
