@@ -1,7 +1,6 @@
 pipeline {
     agent any
     
-    // Corregido el typo: environment
     environment {
         NETLIFY_SITE_ID = '9b15c18a-39bf-4e81-af37-9ef8c5a0ef2c'
         NETLIFY_AUTH_TOKEN = 'nfp_pQTCRac9T2fggHb5drgdqKVdL1RyjYHH0f4d'
@@ -21,7 +20,7 @@ pipeline {
                     node --version
                     npm --version
                     
-                    echo "Saltando npm ci y npm run build para ahorrar tiempo..."
+                    echo "Instalando dependencias y construyendo la aplicacion..."
                     npm ci
                     npm run build
                     
@@ -72,14 +71,18 @@ pipeline {
             }
             steps {
                 sh '''
+                    # Instalamos bash por si Netlify se pone fresa y lo exige
+                    apk add --no-cache bash
+                    
                     npm install netlify-cli -g
                     netlify --version
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
                     
-                    # Checamos que la conexión esté viva
-                    netlify status
+                    echo '[build]' > netlify.toml
+                    echo '  command = "echo Ya construido por Jenkins, saltando..."' >> netlify.toml
+                    echo '  publish = "build"' >> netlify.toml
                     
-                    # El comando de Despa, pero limpio porque lo instalaste global
+                    netlify status
                     netlify deploy --dir=build --prod
                 '''
             }
