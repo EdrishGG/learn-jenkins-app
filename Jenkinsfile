@@ -76,8 +76,11 @@ pipeline {
                     netlify --version
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
                     
-                    # Llamamos al comando global directamente
+                    # Checamos que la conexión esté viva
                     netlify status
+                    
+                    # El comando de Despa, pero limpio porque lo instalaste global
+                    netlify deploy --dir=build --prod
                 '''
             }
         }
