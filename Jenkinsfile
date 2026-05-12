@@ -88,7 +88,7 @@ pipeline {
             }
         }
     }
-    
+    // This is a comment to see if the webhook triggers the Jenkins pipeline
     post {
         always {
             echo '¡Pipeline finalizado con exito! (Reportes desactivados temporalmente)'
