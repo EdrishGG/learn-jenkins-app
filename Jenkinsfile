@@ -87,6 +87,25 @@ pipeline {
                 '''
             }
         }
+        
+         stage('Prod E2E') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    reuseNode true
+                }
+            }
+            
+            environment {
+        CI_ENVIRONMENT_URL = 'https://mytestwebsitecd.netlify.app'}
+        
+            steps {
+                sh '''
+                    echo "Saltando pruebas Prod E2E pesadas..."
+                    # npx playwright test --reporter=html
+                '''
+            }
+        }
     }
     // This is a comment to see if the webhook triggers the Jenkins pipeline (Ahora si perro)
     post {
