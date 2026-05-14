@@ -97,12 +97,13 @@ pipeline {
             }
             
             environment {
-        CI_ENVIRONMENT_URL = 'https://mytestwebsitecd.netlify.app'}
+        CI_ENVIRONMENT_URL = 'https://mytestwebsitecd.netlify.app'
+                 }
         
             steps {
                 sh '''
-                    echo "Saltando pruebas Prod E2E pesadas..."
-                    # npx playwright test --reporter=html
+                    echo "Haciendo pruebas Prod E2E realmente pesadas..."
+                    npx playwright test --reporter=html
                 '''
             }
         }
