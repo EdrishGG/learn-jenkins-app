@@ -62,7 +62,7 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy staging') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -83,12 +83,12 @@ pipeline {
                     echo '  publish = "build"' >> netlify.toml
                     
                     netlify status
-                    netlify deploy --dir=build --prod
+                    netlify deploy --dir=build
                 '''
             }
         }
         
-         stage('Prod E2E') {
+         stage('Staging E2E') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
