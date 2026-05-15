@@ -83,7 +83,39 @@ pipeline {
                     echo '  publish = "build"' >> netlify.toml
                     
                     netlify status
-                    netlify deploy --dir=build
+                    netlify deploy --dir=build --test
+                '''
+            }
+        }
+        
+            stage('Approval') {
+                steps {
+                    input message: 'Do you wish to deploy to production?', ok: 'Yes, I am sure!'
+                }
+            }
+        
+            stage('Deploy prod') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    # Instalamos bash por si Netlify se pone fresa y lo exige
+                    apk add --no-cache bash
+                    
+                    npm install netlify-cli -g
+                    netlify --version
+                    echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
+                    
+                    echo '[build]' > netlify.toml
+                    echo '  command = "echo Ya construido por Jenkins, saltando..."' >> netlify.toml
+                    echo '  publish = "build"' >> netlify.toml
+                    
+                    netlify status
+                    netlify deploy --dir=build 
                 '''
             }
         }
